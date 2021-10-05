@@ -29,9 +29,7 @@ class MyApp extends StatelessWidget {
           return MaterialApp(
             debugShowCheckedModeBanner: false,
             title: 'News App',
-            theme: ThemeData(
-              primarySwatch: Colors.blue,
-            ),
+            theme: ThemeData(),
             initialRoute: FirebaseAuth.instance.currentUser == null
                 ? "login_screen"
                 : "Home_screen",
