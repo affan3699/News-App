@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:newsapp/Screens/Categories.dart';
 import 'package:newsapp/Screens/Login.dart';
 import 'package:http/http.dart';
+import 'package:newsapp/Screens/Search.dart';
 import 'package:newsapp/models/NewsModel.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
@@ -118,7 +119,24 @@ class _State extends State<Home> {
                           autofocus: false,
                           textInputAction: TextInputAction.search,
                           onSubmitted: (value) {
-                            print(value);
+                            if (value == "") {
+                              Fluttertoast.showToast(
+                                msg: "Please Enter Some Text",
+                                toastLength: Toast.LENGTH_SHORT,
+                                gravity: ToastGravity.BOTTOM,
+                                timeInSecForIosWeb: 1,
+                                backgroundColor: Colors.black87,
+                                textColor: Colors.white,
+                                fontSize: 15.0,
+                              );
+                            } else {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => Search(value)));
+                            }
+                            ;
+                            searchController.clear();
                           },
                           decoration: InputDecoration(
                             border: InputBorder.none,

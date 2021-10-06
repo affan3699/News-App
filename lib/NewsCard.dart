@@ -19,6 +19,7 @@ Widget NewsCard(BuildContext context, int index, List newsList) {
                   (newsList[index].newsImage == null)
                       ? "https://ak.picdn.net/shutterstock/videos/6137654/thumb/1.jpg"
                       : (newsList[index].newsImage),
+                  scale: 2.0,
                 ),
                 fit: BoxFit.fill,
               ),
