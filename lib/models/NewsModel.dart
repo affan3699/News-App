@@ -1,17 +1,17 @@
 class NewsModel {
-  String newsHead, newsDes, newsImg, newsUrl;
+  String newsTitle, newsDes, newsImage, newsUrl;
 
   NewsModel(
-      {this.newsHead = "NEWS HEADLINE",
-      this.newsDes = "SOME NEWS",
-      this.newsImg = "SOME URL",
-      this.newsUrl = "SOME URL"});
+      {this.newsTitle = "NEWS Title",
+      this.newsDes = "News Desc",
+      this.newsImage = "URL",
+      this.newsUrl = "URL"});
 
   factory NewsModel.fromMap(Map news) {
     return NewsModel(
-        newsHead: news["title"],
+        newsTitle: news["title"],
         newsDes: news["description"],
-        newsImg: news["urlToImage"],
+        newsImage: news["urlToImage"],
         newsUrl: news["url"]);
   }
 }

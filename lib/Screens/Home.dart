@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:ffi';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:newsapp/Screens/Login.dart';
+import 'package:http/http.dart';
+import 'package:newsapp/models/NewsModel.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -14,6 +17,7 @@ class Home extends StatefulWidget {
 
 class _State extends State<Home> {
   TextEditingController searchController = new TextEditingController();
+  List<NewsModel> newsList = <NewsModel>[];
 
   List<String> categories = [
     "Top Stories",
@@ -23,10 +27,20 @@ class _State extends State<Home> {
   ];
 
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getNews();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("News App"),
+        title: Text(
+          "News App",
+          style: TextStyle(color: Colors.black),
+        ),
         centerTitle: true,
         backgroundColor: Colors.lightBlueAccent,
         actions: [
@@ -136,7 +150,7 @@ class _State extends State<Home> {
                               style: TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.white,
+                                color: Colors.black,
                               ),
                             ),
                           ],
@@ -147,7 +161,7 @@ class _State extends State<Home> {
                 ),
               ),
               ListView.builder(
-                itemCount: 4,
+                itemCount: newsList.length,
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 physics: BouncingScrollPhysics(),
@@ -160,7 +174,7 @@ class _State extends State<Home> {
                       height: 300.0,
                       margin: EdgeInsets.symmetric(
                           horizontal: 18.0, vertical: 12.0),
-                      child: NewsCard(context),
+                      child: NewsCard(context, index),
                     ),
                   );
                 },
@@ -185,7 +199,7 @@ class _State extends State<Home> {
     }
   }
 
-  Widget NewsCard(BuildContext context) {
+  Widget NewsCard(BuildContext context, int index) {
     return Container(
       width: 300.0,
       padding: EdgeInsets.symmetric(horizontal: 9.0, vertical: 20.0),
@@ -201,7 +215,10 @@ class _State extends State<Home> {
                 borderRadius: BorderRadius.circular(10.0),
                 image: DecorationImage(
                   image: NetworkImage(
-                      "https://cdn.cnn.com/cnnnext/dam/assets/211005054803-facebook-headquarters-menlo-park-cailfornia-110619-file-restricted-super-tease.jpg"),
+                    (newsList[index].newsImage == null)
+                        ? "https://ak.picdn.net/shutterstock/videos/6137654/thumb/1.jpg"
+                        : (newsList[index].newsImage),
+                  ),
                   fit: BoxFit.fill,
                 ),
               ),
@@ -209,11 +226,11 @@ class _State extends State<Home> {
           ),
           SizedBox(height: 5.0),
           Text(
-            "New Title",
+            newsList[index].newsTitle,
             overflow: TextOverflow.ellipsis,
-            maxLines: 2,
+            maxLines: 3,
             style: TextStyle(
-              fontSize: 18.0,
+              fontSize: 15.0,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
@@ -221,5 +238,23 @@ class _State extends State<Home> {
         ],
       ),
     );
+  }
+
+  void getNews() async {
+    String url =
+        "https://newsapi.org/v2/top-headlines?country=us&apiKey=ccee04ed2c9849c5869e896919422d80";
+    Response response = await get(Uri.parse(url));
+    Map data = jsonDecode(response.body);
+
+    setState(() {
+      data["articles"].forEach((element) {
+        NewsModel newsModel = new NewsModel();
+        newsModel = NewsModel.fromMap(element);
+        newsList.add(newsModel);
+        setState(() {
+          //isLoading = false;
+        });
+      });
+    });
   }
 }
