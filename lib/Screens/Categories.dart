@@ -38,36 +38,40 @@ class _CaregoriesState extends State<Caregories> {
           style: TextStyle(color: Colors.black),
         ),
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        child: ListView.builder(
-          itemCount: newsList.length,
-          scrollDirection: Axis.vertical,
-          shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          itemBuilder: (context, index) {
-            return InkWell(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) =>
-                            NewsDetail(newsList[index].newsUrl)));
-              },
-              child: Container(
-                width: double.infinity,
-                height: 300.0,
-                margin: EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
-                child: NewsCard(context, index, newsList),
-              ),
-            );
-          },
+      body: RefreshIndicator(
+        onRefresh: () => getNews(widget.category),
+        child: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: ListView.builder(
+            itemCount: newsList.length,
+            scrollDirection: Axis.vertical,
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            itemBuilder: (context, index) {
+              return InkWell(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              NewsDetail(newsList[index].newsUrl)));
+                },
+                child: Container(
+                  width: double.infinity,
+                  height: 300.0,
+                  margin:
+                      EdgeInsets.symmetric(horizontal: 18.0, vertical: 12.0),
+                  child: NewsCard(context, index, newsList),
+                ),
+              );
+            },
+          ),
         ),
       ),
     );
   }
 
-  void getNews(String category) async {
+  Future<void> getNews(String category) async {
     setState(() {
       showSpinner = true;
     });

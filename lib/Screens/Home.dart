@@ -89,71 +89,121 @@ class _State extends State<Home> {
           )
         ],
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        child: SafeArea(
-          child: SingleChildScrollView(
-            child: Column(
-              children: [
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 8),
-                  margin: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(24),
-                  ),
-                  child: Row(
-                    children: [
-                      GestureDetector(
-                        onTap: () {},
-                        child: Container(
-                          child: Icon(
-                            Icons.search_outlined,
-                            color: Colors.lightBlueAccent,
+      body: RefreshIndicator(
+        onRefresh: getNews,
+        child: ModalProgressHUD(
+          inAsyncCall: showSpinner,
+          child: SafeArea(
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 8),
+                    margin: EdgeInsets.symmetric(horizontal: 24, vertical: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                    child: Row(
+                      children: [
+                        GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            child: Icon(
+                              Icons.search_outlined,
+                              color: Colors.lightBlueAccent,
+                            ),
+                            margin: EdgeInsets.fromLTRB(3, 0, 7, 0),
                           ),
-                          margin: EdgeInsets.fromLTRB(3, 0, 7, 0),
                         ),
-                      ),
-                      Expanded(
-                        child: TextField(
-                          controller: searchController,
-                          autofocus: false,
-                          textInputAction: TextInputAction.search,
-                          onSubmitted: (value) {
-                            if (value == "") {
-                              Fluttertoast.showToast(
-                                msg: "Please Enter Some Text",
-                                toastLength: Toast.LENGTH_SHORT,
-                                gravity: ToastGravity.BOTTOM,
-                                timeInSecForIosWeb: 1,
-                                backgroundColor: Colors.black87,
-                                textColor: Colors.white,
-                                fontSize: 15.0,
-                              );
-                            } else {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => Search(value)));
-                            }
-                            ;
-                            searchController.clear();
+                        Expanded(
+                          child: TextField(
+                            controller: searchController,
+                            autofocus: false,
+                            textInputAction: TextInputAction.search,
+                            onSubmitted: (value) {
+                              if (value == "") {
+                                Fluttertoast.showToast(
+                                  msg: "Please Enter Some Text",
+                                  toastLength: Toast.LENGTH_SHORT,
+                                  gravity: ToastGravity.BOTTOM,
+                                  timeInSecForIosWeb: 1,
+                                  backgroundColor: Colors.black87,
+                                  textColor: Colors.white,
+                                  fontSize: 15.0,
+                                );
+                              } else {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => Search(value)));
+                              }
+                              ;
+                              searchController.clear();
+                            },
+                            decoration: InputDecoration(
+                              border: InputBorder.none,
+                              hintText: "Search News",
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Container(
+                    height: 45,
+                    child: ListView.builder(
+                      itemCount: categories.length,
+                      shrinkWrap: true,
+                      scrollDirection: Axis.horizontal,
+                      itemBuilder: (context, index) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        Caregories(categories[index])));
                           },
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                            hintText: "Search News",
+                          splashColor: Colors.black38,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.lightBlueAccent,
+                              borderRadius: BorderRadius.circular(13),
+                            ),
+                            margin: EdgeInsets.symmetric(horizontal: 6),
+                            padding: EdgeInsets.symmetric(
+                              vertical: 11,
+                              horizontal: 21,
+                            ),
+                            child: Row(
+                              children: [
+                                Icon(
+                                  Icons.speaker_notes_outlined,
+                                  size: 20,
+                                  color: Colors.black87,
+                                ),
+                                SizedBox(width: 5),
+                                Text(
+                                  categories[index],
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.black,
+                                  ),
+                                ),
+                              ],
+                            ),
                           ),
-                        ),
-                      ),
-                    ],
+                        );
+                      },
+                    ),
                   ),
-                ),
-                Container(
-                  height: 45,
-                  child: ListView.builder(
-                    itemCount: categories.length,
+                  ListView.builder(
+                    itemCount: newsList.length,
+                    scrollDirection: Axis.vertical,
                     shrinkWrap: true,
-                    scrollDirection: Axis.horizontal,
+                    physics: BouncingScrollPhysics(),
                     itemBuilder: (context, index) {
                       return InkWell(
                         onTap: () {
@@ -161,67 +211,20 @@ class _State extends State<Home> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) =>
-                                      Caregories(categories[index])));
+                                      NewsDetail(newsList[index].newsUrl)));
                         },
-                        splashColor: Colors.black38,
                         child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.lightBlueAccent,
-                            borderRadius: BorderRadius.circular(13),
-                          ),
-                          margin: EdgeInsets.symmetric(horizontal: 6),
-                          padding: EdgeInsets.symmetric(
-                            vertical: 11,
-                            horizontal: 21,
-                          ),
-                          child: Row(
-                            children: [
-                              Icon(
-                                Icons.speaker_notes_outlined,
-                                size: 20,
-                                color: Colors.black87,
-                              ),
-                              SizedBox(width: 5),
-                              Text(
-                                categories[index],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                ),
-                              ),
-                            ],
-                          ),
+                          width: double.infinity,
+                          height: 300.0,
+                          margin: EdgeInsets.symmetric(
+                              horizontal: 18.0, vertical: 12.0),
+                          child: NewsCard(context, index, newsList),
                         ),
                       );
                     },
                   ),
-                ),
-                ListView.builder(
-                  itemCount: newsList.length,
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  physics: BouncingScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    return InkWell(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) =>
-                                    NewsDetail(newsList[index].newsUrl)));
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        height: 300.0,
-                        margin: EdgeInsets.symmetric(
-                            horizontal: 18.0, vertical: 12.0),
-                        child: NewsCard(context, index, newsList),
-                      ),
-                    );
-                  },
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
@@ -242,7 +245,7 @@ class _State extends State<Home> {
     }
   }
 
-  void getNews() async {
+  Future<void> getNews() async {
     setState(() {
       showSpinner = true;
     });
