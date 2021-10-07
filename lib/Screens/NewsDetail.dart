@@ -12,8 +12,6 @@ class NewsDetail extends StatefulWidget {
 }
 
 class _NewsDetailState extends State<NewsDetail> {
-  bool showSpinner = false;
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,22 +23,9 @@ class _NewsDetailState extends State<NewsDetail> {
         backgroundColor: Colors.lightBlueAccent,
         centerTitle: true,
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: showSpinner,
-        child: WebView(
-          initialUrl: widget.URL,
-          javascriptMode: JavascriptMode.unrestricted,
-          onPageStarted: (value) {
-            setState(() {
-              showSpinner = true;
-            });
-          },
-          onPageFinished: (value) {
-            setState(() {
-              showSpinner = false;
-            });
-          },
-        ),
+      body: WebView(
+        initialUrl: widget.URL,
+        javascriptMode: JavascriptMode.unrestricted,
       ),
     );
   }
