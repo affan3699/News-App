@@ -6,6 +6,7 @@ import 'package:newsapp/models/NewsModel.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import '../NewsCard.dart';
+import 'NewsDetail.dart';
 
 class Search extends StatefulWidget {
   String searchText;
@@ -45,9 +46,14 @@ class _SearchState extends State<Search> {
           shrinkWrap: true,
           physics: BouncingScrollPhysics(),
           itemBuilder: (context, index) {
-            //var trending = trendingList[index];
             return InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            NewsDetail(newsList[index].newsUrl)));
+              },
               child: Container(
                 width: double.infinity,
                 height: 300.0,

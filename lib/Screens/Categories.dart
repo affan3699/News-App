@@ -6,6 +6,8 @@ import 'package:newsapp/models/NewsModel.dart';
 import '../NewsCard.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+import 'NewsDetail.dart';
+
 class Caregories extends StatefulWidget {
   String category;
 
@@ -44,9 +46,14 @@ class _CaregoriesState extends State<Caregories> {
           shrinkWrap: true,
           physics: BouncingScrollPhysics(),
           itemBuilder: (context, index) {
-            //var trending = trendingList[index];
             return InkWell(
-              onTap: () {},
+              onTap: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            NewsDetail(newsList[index].newsUrl)));
+              },
               child: Container(
                 width: double.infinity,
                 height: 300.0,

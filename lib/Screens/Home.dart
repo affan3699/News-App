@@ -9,6 +9,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:newsapp/Screens/Categories.dart';
 import 'package:newsapp/Screens/Login.dart';
 import 'package:http/http.dart';
+import 'package:newsapp/Screens/NewsDetail.dart';
 import 'package:newsapp/Screens/Search.dart';
 import 'package:newsapp/models/NewsModel.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -202,9 +203,14 @@ class _State extends State<Home> {
                   shrinkWrap: true,
                   physics: BouncingScrollPhysics(),
                   itemBuilder: (context, index) {
-                    //var trending = trendingList[index];
                     return InkWell(
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    NewsDetail(newsList[index].newsUrl)));
+                      },
                       child: Container(
                         width: double.infinity,
                         height: 300.0,
