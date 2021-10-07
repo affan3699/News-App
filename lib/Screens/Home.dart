@@ -15,8 +15,12 @@ import 'package:newsapp/models/NewsModel.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../NewsCard.dart';
+import 'Profile.dart';
 
 class Home extends StatefulWidget {
+  bool loggedIn;
+
+  Home(this.loggedIn);
   @override
   _State createState() => _State();
 }
@@ -51,7 +55,7 @@ class _State extends State<Home> {
       appBar: AppBar(
         title: Text(
           "News App",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Colors.lightBlueAccent,
@@ -235,12 +239,40 @@ class _State extends State<Home> {
   void onSelected(BuildContext context, int item) async {
     switch (item) {
       case 0:
-        Navigator.pushNamed(context, "profile_screen");
+        if (widget.loggedIn == true) {
+          Navigator.push(
+              context, MaterialPageRoute(builder: (context) => Profile()));
+        } else {
+          Fluttertoast.showToast(
+            msg: "YOU ARE NOT LOGGED IN",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black87,
+            textColor: Colors.white,
+            fontSize: 15.0,
+          );
+        }
+
         break;
       case 1:
-        await FirebaseAuth.instance.signOut();
-        Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Login()), (route) => false);
+        if (widget.loggedIn == true) {
+          await FirebaseAuth.instance.signOut();
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (context) => Login()),
+              (route) => false);
+        } else {
+          Fluttertoast.showToast(
+            msg: "YOU ARE NOT LOGGED IN",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black87,
+            textColor: Colors.white,
+            fontSize: 15.0,
+          );
+        }
+
         break;
     }
   }

@@ -48,8 +48,8 @@ class _SignUpState extends State<SignUp> {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 32, right: 32),
                         child: Text(
-                          'Sign Up',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          "SIGN UP",
+                          style: TextStyle(color: Colors.white, fontSize: 17),
                         ),
                       ),
                     ),

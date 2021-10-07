@@ -3,6 +3,7 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:newsapp/Screens/Home.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Login extends StatefulWidget {
   @override
@@ -11,6 +12,7 @@ class Login extends StatefulWidget {
 
 class _LoginState extends State<Login> {
   String email = "", password = "";
+
   bool showSpinner = false;
 
   @override
@@ -47,8 +49,8 @@ class _LoginState extends State<Login> {
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 32, right: 32),
                         child: Text(
-                          'Login',
-                          style: TextStyle(color: Colors.white, fontSize: 18),
+                          "LOGIN",
+                          style: TextStyle(color: Colors.white, fontSize: 17),
                         ),
                       ),
                     ),
@@ -74,13 +76,14 @@ class _LoginState extends State<Login> {
                         onChanged: (value) {
                           email = value;
                         },
+                        keyboardType: TextInputType.emailAddress,
                         decoration: InputDecoration(
                           border: InputBorder.none,
                           icon: Icon(
                             Icons.person_outline_sharp,
                             color: Colors.lightBlueAccent,
                           ),
-                          hintText: 'Email',
+                          hintText: "Email",
                         ),
                       ),
                     ),
@@ -105,7 +108,7 @@ class _LoginState extends State<Login> {
                             Icons.vpn_key_sharp,
                             color: Colors.lightBlueAccent,
                           ),
-                          hintText: 'Password',
+                          hintText: "Password",
                         ),
                       ),
                     ),
@@ -150,6 +153,27 @@ class _LoginState extends State<Login> {
                   Navigator.pushNamed(context, 'signUp_screen');
                 },
               ),
+              SizedBox(height: 15),
+              InkWell(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Text(
+                      "Skip For Now",
+                      style: TextStyle(
+                        color: Colors.lightBlueAccent,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 18,
+                        decoration: TextDecoration.underline,
+                      ),
+                    ),
+                  ],
+                ),
+                onTap: () {
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => Home(false)));
+                },
+              ),
             ],
           ),
         ),
@@ -173,10 +197,22 @@ class _LoginState extends State<Login> {
         showSpinner = true;
       });
       FirebaseAuth auth = FirebaseAuth.instance;
+      FirebaseFirestore firestore = FirebaseFirestore.instance;
 
       try {
         UserCredential userCredential = await FirebaseAuth.instance
             .signInWithEmailAndPassword(email: email, password: password);
+
+        // final DocumentSnapshot snapshot = await firestore
+        //     .collection("users")
+        //     .doc(userCredential.user!.uid)
+        //     .get();
+        //
+        // final data = snapshot.data() as dynamic;
+        //
+        // emailFirebasse = data["Email"];
+        // username = data["Full Name"];
+        // address = data["Address"];
 
         Fluttertoast.showToast(
           msg: "Welcome",
@@ -188,7 +224,8 @@ class _LoginState extends State<Login> {
           fontSize: 15.0,
         );
         Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => Home()), (route) => false);
+            MaterialPageRoute(builder: (context) => Home(true)),
+            (route) => false);
       } on FirebaseAuthException catch (e) {
         if (e.code == 'user-not-found') {
           Fluttertoast.showToast(

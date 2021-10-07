@@ -1,6 +1,23 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
+  String name = "", email = "", address = "";
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getProfileData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -16,7 +33,7 @@ class Profile extends StatelessWidget {
               backgroundImage: AssetImage(''),
             ),
             Text(
-              "Affan Murtaza",
+              name,
               style: TextStyle(
                 fontFamily: 'Pacifico',
                 fontSize: 40.0,
@@ -55,7 +72,7 @@ class Profile extends StatelessWidget {
                   color: Colors.black,
                 ),
                 title: Text(
-                  'affan123@gmail.com',
+                  email,
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Colors.black,
@@ -72,7 +89,7 @@ class Profile extends StatelessWidget {
                   color: Colors.black,
                 ),
                 title: Text(
-                  'Clifton',
+                  address,
                   style: TextStyle(
                     fontSize: 20.0,
                     color: Colors.black,
@@ -85,5 +102,23 @@ class Profile extends StatelessWidget {
         )),
       ),
     );
+  }
+
+  void getProfileData() async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+    var user = FirebaseAuth.instance.currentUser;
+    final DocumentSnapshot snapshot =
+        await firestore.collection("users").doc(user!.uid).get();
+
+    final data = snapshot.data() as dynamic;
+
+    setState(() {
+      email = data["Email"];
+      name = data["Full Name"];
+      address = data["Address"];
+    });
+
+    print(email);
   }
 }
