@@ -247,6 +247,16 @@ class _LoginState extends State<Login> {
             textColor: Colors.white,
             fontSize: 15.0,
           );
+        } else {
+          Fluttertoast.showToast(
+            msg: "Incorrect Email or Password",
+            toastLength: Toast.LENGTH_SHORT,
+            gravity: ToastGravity.BOTTOM,
+            timeInSecForIosWeb: 1,
+            backgroundColor: Colors.black87,
+            textColor: Colors.white,
+            fontSize: 15.0,
+          );
         }
       }
       setState(() {

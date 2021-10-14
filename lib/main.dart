@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:newsapp/Screens/Home.dart';
 import 'package:newsapp/Screens/Login.dart';
@@ -13,7 +12,6 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  String emailFirebasse = "", username = "", address = "";
   final Future<FirebaseApp> _initialization = Firebase.initializeApp();
 
   @override
